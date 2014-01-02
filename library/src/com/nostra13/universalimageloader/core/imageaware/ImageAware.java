@@ -24,7 +24,7 @@ import com.nostra13.universalimageloader.core.assist.ViewScaleType;
  * Represents image aware view which provides all needed properties and behavior for image processing and displaying
  * through {@link com.nostra13.universalimageloader.core.ImageLoader ImageLoader}.
  * It can wrap any Android {@link android.view.View View} which can be accessed by {@link #getWrappedView()}. Wrapped
- * view is returned in {@link com.nostra13.universalimageloader.core.assist.ImageLoadingListener ImageLoadingListener}'s
+ * view is returned in {@link com.nostra13.universalimageloader.core.listener.ImageLoadingListener ImageLoadingListener}'s
  * callbacks.
  *
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
@@ -62,7 +62,7 @@ public interface ImageAware {
 	/**
 	 * Returns a flag whether image aware view is collected by GC or whatsoever. If so then ImageLoader stop processing
 	 * of task for this image aware view and fires
-	 * {@link com.nostra13.universalimageloader.core.assist.ImageLoadingListener#onLoadingCancelled(String,
+	 * {@link com.nostra13.universalimageloader.core.listener.ImageLoadingListener#onLoadingCancelled(String,
 	 * android.view.View) ImageLoadingListener#onLoadingCancelled(String, View)} callback.<br />
 	 * May be called on UI thread.
 	 *
@@ -91,7 +91,8 @@ public interface ImageAware {
 	 *android.graphics.drawable.Drawable) on loading} or
 	 * {@linkplain com.nostra13.universalimageloader.core.DisplayImageOptions.Builder#showImageOnFail(
 	 *android.graphics.drawable.Drawable) on loading fail}. These drawables can be specified in
-	 * {@linkplain com.nostra13.universalimageloader.core.DisplayImageOptions display options}.
+	 * {@linkplain com.nostra13.universalimageloader.core.DisplayImageOptions display options}.<br />
+	 * Also can be called in {@link com.nostra13.universalimageloader.core.display.BitmapDisplayer BitmapDisplayer}.
 	 *
 	 * @return <b>true</b> if drawable was set successfully; <b>false</b> - otherwise
 	 */

@@ -26,6 +26,8 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.nostra13.example.universalimageloader.Constants.Extra;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -102,6 +104,7 @@ public class ImageGridActivity extends AbsListViewBaseActivity {
 				assert view != null;
 				holder.imageView = (ImageView) view.findViewById(R.id.image);
 				holder.progressBar = (ProgressBar) view.findViewById(R.id.progress);
+				holder.tv_progress = (TextView) view.findViewById(R.id.tv_progress);
 				view.setTag(holder);
 			} else {
 				holder = (ViewHolder) view.getTag();
@@ -110,25 +113,30 @@ public class ImageGridActivity extends AbsListViewBaseActivity {
 			imageLoader.displayImage(imageUrls[position], holder.imageView, options, new SimpleImageLoadingListener() {
 										 @Override
 										 public void onLoadingStarted(String imageUri, View view) {
+										     holder.tv_progress.setText("0%");
 											 holder.progressBar.setProgress(0);
 											 holder.progressBar.setVisibility(View.VISIBLE);
+											 holder.tv_progress.setVisibility(View.VISIBLE);
 										 }
 
 										 @Override
 										 public void onLoadingFailed(String imageUri, View view,
 												 FailReason failReason) {
 											 holder.progressBar.setVisibility(View.GONE);
+											 holder.tv_progress.setVisibility(View.GONE);
 										 }
 
 										 @Override
 										 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 											 holder.progressBar.setVisibility(View.GONE);
+											 holder.tv_progress.setVisibility(View.GONE);
 										 }
 									 }, new ImageLoadingProgressListener() {
 										 @Override
 										 public void onProgressUpdate(String imageUri, View view, int current,
 												 int total) {
-											 holder.progressBar.setProgress(Math.round(100.0f * current / total));
+										     holder.tv_progress.setText(Math.round(100.0f * current / total)+"%");
+											 //holder.progressBar.setProgress(Math.round(100.0f * current / total));
 										 }
 									 }
 			);
@@ -139,6 +147,7 @@ public class ImageGridActivity extends AbsListViewBaseActivity {
 		class ViewHolder {
 			ImageView imageView;
 			ProgressBar progressBar;
+			TextView tv_progress;
 		}
 	}
 }

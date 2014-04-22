@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Sergey Tarasevich
+ * Copyright 2014 Sergey Tarasevich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.nostra13.universalimageloader.core.listener;
+package com.nostra13.universalimageloader.cache.memory;
 
 import android.graphics.Bitmap;
-import android.view.View;
 
 /**
- * Listener which is designed for synchronous image loading.
+ * Interface for memory cache
  *
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
- * @since 1.9.0
+ * @since 1.9.2
  */
-public class SyncImageLoadingListener extends SimpleImageLoadingListener {
-
-	private Bitmap loadedImage;
-
-	@Override
-	public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-		this.loadedImage = loadedImage;
-	}
-
-	public Bitmap getLoadedBitmap() {
-		return loadedImage;
-	}
+public interface MemoryCache extends MemoryCacheAware<String, Bitmap> {
 }

@@ -17,17 +17,14 @@ package com.nostra13.universalimageloader.core.download;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.provider.ContactsContract;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ContentLengthInputStream;
 import com.nostra13.universalimageloader.utils.IoUtils;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -57,6 +54,8 @@ public class BaseImageDownloader implements ImageDownloader {
 	protected static final String ALLOWED_URI_CHARS = "@#&=*+-_.,:!?()/~'%";
 
 	protected static final int MAX_REDIRECT_COUNT = 5;
+
+	protected static final String CONTENT_CONTACTS_URI_PREFIX = "content://com.android.contacts/";
 
 	private static final String ERROR_UNSUPPORTED_SCHEME = "UIL doesn't support scheme(protocol) by default [%s]. "
 			+ "You should implement this support yourself (BaseImageDownloader.getStreamFromOtherSource(...))";
@@ -157,7 +156,7 @@ public class BaseImageDownloader implements ImageDownloader {
 	protected InputStream getStreamFromFile(String imageUri, Object extra) throws IOException {
 		String filePath = Scheme.FILE.crop(imageUri);
 		return new ContentLengthInputStream(new BufferedInputStream(new FileInputStream(filePath), BUFFER_SIZE),
-				new File(filePath).length());
+				(int) new File(filePath).length());
 	}
 
 	/**
@@ -172,7 +171,11 @@ public class BaseImageDownloader implements ImageDownloader {
 	protected InputStream getStreamFromContent(String imageUri, Object extra) throws FileNotFoundException {
 		ContentResolver res = context.getContentResolver();
 		Uri uri = Uri.parse(imageUri);
-		return res.openInputStream(uri);
+		if (imageUri.startsWith(CONTENT_CONTACTS_URI_PREFIX)) {
+			return ContactsContract.Contacts.openContactPhotoInputStream(res, uri);
+		} else {
+			return res.openInputStream(uri);
+		}
 	}
 
 	/**
@@ -200,12 +203,7 @@ public class BaseImageDownloader implements ImageDownloader {
 	protected InputStream getStreamFromDrawable(String imageUri, Object extra) {
 		String drawableIdString = Scheme.DRAWABLE.crop(imageUri);
 		int drawableId = Integer.parseInt(drawableIdString);
-		BitmapDrawable drawable = (BitmapDrawable) context.getResources().getDrawable(drawableId);
-		Bitmap bitmap = drawable.getBitmap();
-
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		bitmap.compress(CompressFormat.PNG, 0, os);
-		return new ByteArrayInputStream(os.toByteArray());
+		return context.getResources().openRawResource(drawableId);
 	}
 
 	/**

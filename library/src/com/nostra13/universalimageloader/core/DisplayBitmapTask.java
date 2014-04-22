@@ -48,7 +48,7 @@ final class DisplayBitmapTask implements Runnable {
 	private boolean loggingEnabled;
 
 	public DisplayBitmapTask(Bitmap bitmap, ImageLoadingInfo imageLoadingInfo, ImageLoaderEngine engine,
-							 LoadedFrom loadedFrom) {
+			LoadedFrom loadedFrom) {
 		this.bitmap = bitmap;
 		imageUri = imageLoadingInfo.uri;
 		imageAware = imageLoadingInfo.imageAware;
@@ -70,8 +70,8 @@ final class DisplayBitmapTask implements Runnable {
 		} else {
 			if (loggingEnabled) L.d(LOG_DISPLAY_IMAGE_IN_IMAGEAWARE, loadedFrom, memoryCacheKey);
 			displayer.display(bitmap, imageAware, loadedFrom);
-			listener.onLoadingComplete(imageUri, imageAware.getWrappedView(), bitmap);
 			engine.cancelDisplayTaskFor(imageAware);
+			listener.onLoadingComplete(imageUri, imageAware.getWrappedView(), bitmap);
 		}
 	}
 
